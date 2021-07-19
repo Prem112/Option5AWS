@@ -54,9 +54,11 @@ Running main.py from the command line and start to deploy the infrastructure.
 
 
 
-## main.py 
+## 
 
-Download::
+# Download
+
+
 
 ``` 
 git clone https://github.com/Prem112/Option5AWS.git
@@ -66,11 +68,20 @@ git clone https://github.com/Prem112/Option5AWS.git
 
 # Getting Started
 
+This user guide is combination of CLI and Python scripts.
+
+* Create 1 AWS KMS key with name
+* Create 1 dynamodb table with name
+* Create 1 EC2 instance with name
+* Create IAM Role with name
+* Role should have a policy attached to it with following conditions
+* Attach role to EC2 instance
+
 
 
 Create Admin User using AWS GUI.
 
-## Create AWS KMS Key 
+## 1. Create AWS KMS Key 
 
 Type `aws kms create-key --description "This is my key for test-devops-kms-key-dev-eu-west-1"` to create user.
 
@@ -106,7 +117,7 @@ Type `aws kms create-alias --alias-name alias/test-devops-kms-key-dev-eu-west-1 
 
 
 
-## Create dynamodb table
+## 2. Create dynamodb table
 
 
 
@@ -220,9 +231,97 @@ for item in resp['Items']:
 
 ```
 
+## 3. Create IAM Role
+
+Type `aws iam create-user --user-name test-devops-User-dev-eu-west-1` to create user.
+
+> {
+>     "User": {
+>         "Path": "/",
+>         "UserName": "test-devops-User-dev-eu-west-1",
+>         "UserId": "AIDAXXXXXXXXXXXXXXX",
+>         "Arn": "arn:aws:iam::386017078612:user/test-devops-User-dev-eu-west-1",
+>         "CreateDate": "2021-07-19T08:33:29+00:00"
+>     }
+> }
+
+Type `aws iam create-access-key --user-name test-devops-User-dev-eu-west-1` to create access key
+
+>{
+>    "AccessKey": {
+>        "UserName": "test-devops-User-dev-eu-west-1",
+>        "AccessKeyId": "AIDAXXXXXXXXXXXXXXX",
+>        "Status": "Active",
+>        "SecretAccessKey": "hAVUfXa3uxxxxxxxxxxxxxxxxxxxxxxxxxx",
+>        "CreateDate": "2021-07-19T08:34:31+00:00"
+>    }
+>}
+
+Type `aws iam create-group --group-name Developers` Groups for Developers.
+
+>{
+>    "Group": {
+>        "Path": "/",
+>        "GroupName": "Developers",
+>        "GroupId": "AGPAVTYDJFVKC2NUGPNHW",
+>        "Arn": "arn:aws:iam::386017078612:group/Developers",
+>        "CreateDate": "2021-07-19T08:44:12+00:00"
+>    }
+>}
+>
+>
+
+Type `aws iam add-user-to-group --user-name test-devops-User-dev-eu-west-1 --group-name Developers` to add the user `test-devops-User-dev-eu-west-1` to groups `Developers`.
+
+>aws iam add-user-to-group --user-name test-devops-User-dev-eu-west-1 --group-name Developers
 
 
-## Create EC2 instance
+
+Assign group policy `AmazonEC2FullAccess `to Developers group.
+
+>aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess --group-name Developers
+>
+>
+
+Type `aws iam list-attached-group-policies --group-name Developers` to list the policy.
+
+>{
+>    "AttachedPolicies": [
+>        {
+>            "PolicyName": "AmazonEC2FullAccess",
+>            "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+>        }
+>    ]
+>}
+
+
+
+Attach role policy from a policy file (.json). Type `aws iam create-role --role-name test-devops-role-dev-eu-west-1 --assume-role-policy-document file://d:/AWS/Option5AWS/Role/test-devops-role-dev-eu-west-1-trust-policy.json`
+
+>{
+>            "Path": "/",
+>            "RoleName": "test-devops-role-dev-eu-west-1",
+>            "RoleId": "AROAVTYDJFVKEQQGX7WYH",
+>            "Arn": "arn:aws:iam::386017078612:role/test-devops-role-dev-eu-west-1",
+>            "CreateDate": "2021-07-19T09:17:40+00:00",
+>            "AssumeRolePolicyDocument": {
+>                "Version": "2012-10-17",
+>                "Statement": [
+>                    {
+>                        "Effect": "Allow",
+>                        "Principal": {
+>                            "Service": "ec2.amazonaws.com"
+>                        },
+>                        "Action": "sts:AssumeRole"
+>                    }
+>                ]
+>            },
+>            "Description": "Allows EC2 instances to call AWS services on your behalf.",
+>            "MaxSessionDuration": 3600
+
+
+
+## 4. Create EC2 instance
 
 ***Check for Key pairs.***
 
@@ -791,94 +890,6 @@ C:\Users\PremStarZ>aws s3 ls
 ```
 
 
-
-## Create IAM Role
-
-Type `aws iam create-user --user-name test-devops-User-dev-eu-west-1` to create user.
-
-> {
->     "User": {
->         "Path": "/",
->         "UserName": "test-devops-User-dev-eu-west-1",
->         "UserId": "AIDAXXXXXXXXXXXXXXX",
->         "Arn": "arn:aws:iam::386017078612:user/test-devops-User-dev-eu-west-1",
->         "CreateDate": "2021-07-19T08:33:29+00:00"
->     }
-> }
-
-Type `aws iam create-access-key --user-name test-devops-User-dev-eu-west-1` to create access key
-
->{
->    "AccessKey": {
->        "UserName": "test-devops-User-dev-eu-west-1",
->        "AccessKeyId": "AIDAXXXXXXXXXXXXXXX",
->        "Status": "Active",
->        "SecretAccessKey": "hAVUfXa3uxxxxxxxxxxxxxxxxxxxxxxxxxx",
->        "CreateDate": "2021-07-19T08:34:31+00:00"
->    }
->}
-
-Type `aws iam create-group --group-name Developers` Groups for Developers.
-
->{
->    "Group": {
->        "Path": "/",
->        "GroupName": "Developers",
->        "GroupId": "AGPAVTYDJFVKC2NUGPNHW",
->        "Arn": "arn:aws:iam::386017078612:group/Developers",
->        "CreateDate": "2021-07-19T08:44:12+00:00"
->    }
->}
->
->
-
-Type `aws iam add-user-to-group --user-name test-devops-User-dev-eu-west-1 --group-name Developers` to add the user `test-devops-User-dev-eu-west-1` to groups `Developers`.
-
->aws iam add-user-to-group --user-name test-devops-User-dev-eu-west-1 --group-name Developers
-
-
-
-Assign group policy `AmazonEC2FullAccess `to Developers group.
-
->aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess --group-name Developers
->
->
-
-Type `aws iam list-attached-group-policies --group-name Developers` to list the policy.
-
->{
->    "AttachedPolicies": [
->        {
->            "PolicyName": "AmazonEC2FullAccess",
->            "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
->        }
->    ]
->}
-
-
-
-Attach role policy from a policy file (.json). Type `aws iam create-role --role-name test-devops-role-dev-eu-west-1 --assume-role-policy-document file://d:/AWS/Option5AWS/Role/test-devops-role-dev-eu-west-1-trust-policy.json`
-
->{
->            "Path": "/",
->            "RoleName": "test-devops-role-dev-eu-west-1",
->            "RoleId": "AROAVTYDJFVKEQQGX7WYH",
->            "Arn": "arn:aws:iam::386017078612:role/test-devops-role-dev-eu-west-1",
->            "CreateDate": "2021-07-19T09:17:40+00:00",
->            "AssumeRolePolicyDocument": {
->                "Version": "2012-10-17",
->                "Statement": [
->                    {
->                        "Effect": "Allow",
->                        "Principal": {
->                            "Service": "ec2.amazonaws.com"
->                        },
->                        "Action": "sts:AssumeRole"
->                    }
->                ]
->            },
->            "Description": "Allows EC2 instances to call AWS services on your behalf.",
->            "MaxSessionDuration": 3600
 
 
 
