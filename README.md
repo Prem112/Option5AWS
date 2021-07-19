@@ -882,74 +882,6 @@ Attach role policy from a policy file (.json). Type `aws iam create-role --role-
 
 
 
-# Design Choices
-
-You use the AWS SDK for Python (Boto3) to create, configure, and manage AWS services, such as Amazon Elastic Compute Cloud (Amazon EC2) and Amazon Simple Storage Service (Amazon S3). The SDK provides an object-oriented API as well as low-level access to AWS services.
-
-This module provides functions for encoding binary data to printable ASCII characters and decoding such encodings back to binary data. It provides encoding and decoding functions for the encodings specified in [**RFC 3548**](https://tools.ietf.org/html/rfc3548.html), which defines the Base16, Base32, and Base64 algorithms, and for the de-facto standard Ascii85 and Base85 encodings.
-
-```
-import boto3
-import base64
-```
-
-
-
-Generate random numbers with a range between 1 to 100.
-
-```
-RandomNo = randrange(1, 100)
-```
-
-
-
-I have defined counter for `Maxcount` for 10 loops which link with `Left` variable, so that it is used to count down in order to display the number of remaining tries.
-
-```
-# Initializing the number of guesses.
-count = 0
-MaxCount = 10
-Left = MaxCount
-while count < MaxCount:
-	count += 1
-	Left  -= 1
-```
-
-
-
-`UserInput` variable will get the user input in integer format.
-
-```
-UserInput = int(input("Enter guess what the target number is:- "))
-```
-
-
-
-The code below is for `If`, `else` statement for decision-making.
-
-```
-	if RandomNo == UserInput:
-		print("Good Job! You guessed it!")
-		# Once guessed, loop will break
-		break
-		
-	elif RandomNo > UserInput:
-		print("Oops, Your guess was LOW.")
-		print("You have only left",Left,"Chances")
-	elif RandomNo < UserInput:
-		print("Oops, Your guess was HIGH.")
-		print("You have only left",Left,"Chances")
-```
-
-
-
-If the maximum number of count >=10, the game will end and display the target number.
-
-```
-if count >= MaxCount:
-	print("\nSorry, You didn't guess my number. It was %d" % RandomNo)
-```
-
 
 
 # Built in
@@ -958,7 +890,72 @@ if count >= MaxCount:
 
 
 
+# Push into Git
 
+1. Type `git status` to see what are the files are added or modified.
+
+   ```
+   $ git status
+   Your branch is up to date with 'origin/main'.
+   
+   Changes not staged for commit:
+     (use "git add <file>..." to update what will be committed)
+     (use "git restore <file>..." to discard changes in working directory)
+           modified:   README.md
+   
+   Untracked files:
+     (use "git add <file>..." to include in what will be committed)
+           .idea/
+           Create_Dynamodb.py
+           Get_Item_Dynamodb.py
+           Get_Record_DynamoDB.py
+           Insert_Item_DynamoDB.py
+   
+   ```
+
+   
+
+2. Type `git add ` to add all the modified files.
+
+   ```
+   $ git add README.md Create_Dynamodb.py Get_Item_Dynamodb.py Get_Record_DynamoDB.py  Insert_Item_DynamoDB.py
+   ```
+
+   
+
+3. Type` git commit -m "Initial check in of codes"`to create a commit.
+
+   ```
+   $ git commit -m "Initial check in of codes"
+   [main 6470eba] Initial check in of codes
+    5 files changed, 1052 insertions(+), 2 deletions(-)
+    create mode 100644 Create_Dynamodb.py
+    create mode 100644 Get_Item_Dynamodb.py
+    create mode 100644 Get_Record_DynamoDB.py
+    create mode 100644 Insert_Item_DynamoDB.py
+    rewrite README.md (100%)
+   
+   ```
+
+   
+
+4. Type `git push -u origin main` to push into main branch.
+
+   ```
+   $ git push -u origin main
+   Enumerating objects: 9, done.
+   Counting objects: 100% (9/9), done.
+   Delta compression using up to 12 threads
+   Compressing objects: 100% (7/7), done.
+   Writing objects: 100% (7/7), 9.78 KiB | 3.26 MiB/s, done.
+   Total 7 (delta 0), reused 0 (delta 0), pack-reused 0
+   To https://github.com/Prem112/Option5AWS.git
+      9dc7a07..6470eba  main -> main
+   Branch 'main' set up to track remote branch 'main' from 'origin'.
+   
+   ```
+
+   
 
 
 
